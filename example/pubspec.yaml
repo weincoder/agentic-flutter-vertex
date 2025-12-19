@@ -1,0 +1,35 @@
+name: example
+description: "A new Flutter project."
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.10.1
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.8
+  feedback: ^3.2.0
+  provider: ^6.1.5+1
+  device_info_plus: ^12.3.0
+  battery_plus: ^7.0.0
+  firebase_core: ^4.3.0
+  record: ^6.1.2
+  flutter_soloud: ^3.4.7
+  firebase_ai: ^3.6.1
+  audio_session: 0.2.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/
+    - assets/images/
