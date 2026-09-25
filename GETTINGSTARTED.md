@@ -1,56 +1,114 @@
-# Getting Started
-En este documento explicaremos como puedes adecuar tu ambiente local.
-## Herramientas que necesitas instalar
+# Getting Started 🚀
 
-* Construido en las versiones:
-    + Node : 25.2.1
-    + Angular: 21.0.0
+En este documento explicamos cómo preparar tu ambiente local para ejecutar y desarrollar en **VoiceFlow Diary** (Flutter + Firebase Vertex AI).
 
-## Guía de instalación
-Esta sección describe el paso a paso para levantar el ambiente local.
-### Adecuar el ambiente local
-Cada carpeta es una clase del curso. Para ejecutar cada ejemplo recuerde descargar dependencias
-```sh
-    npm i
+---
+
+## 🛠️ Herramientas que necesitas instalar
+
+Asegúrate de contar con las siguientes herramientas en tu entorno:
+
+* **Flutter SDK**: `>=3.10.1` ([Guía de instalación de Flutter](https://docs.flutter.dev/get-started/install))
+* **Dart SDK**: Incluido con Flutter.
+* **FlutterFire CLI**: Para vincular tu proyecto con Firebase:
+  ```bash
+  dart pub global activate flutterfire_cli
+  ```
+* **Herramientas por plataforma**:
+  * **Android**: Android Studio, Android SDK, emulador o dispositivo físico.
+  * **iOS / macOS**: macOS con Xcode 14+, CocoaPods (`sudo gem install cocoapods`).
+  * **Web**: Google Chrome u otro navegador moderno.
+  * **Windows / Linux**: Herramientas nativas de compilación C++/CMake correspondientes.
+
+---
+
+## 📋 Guía de instalación paso a paso
+
+### 1. Clonar el repositorio y acceder a la aplicación
+
+```bash
+git clone https://github.com/weincoder/agentic-flutter-vertex.git
+cd agentic-flutter-vertex/example
 ```
 
+### 2. Instalar dependencias
 
-### Configura tus variables de entorno y acceso a Vertex AI
+Descarga todas las librerías necesarias del proyecto de Flutter:
 
-Antes de ejecutar el proyecto, debes configurar las variables de entorno necesarias para la integración con Firebase y Vertex AI.
-
-1. **Configura Firebase:**
-     - Abre el archivo `example/src/environments/environment.ts`.
-     - Reemplaza los valores de las claves por los de tu propio proyecto de Firebase:
-
-     ```ts
-     export const environment = {
-         production: true,
-         firebase: {
-             apiKey: "YOUR_FIREBASE_API_KEY",
-             appId: 'YOUR_FIREBASE_APP_ID',
-             messagingSenderId: 'YOUR_FIREBASE_MESSAGING_SENDER_ID',
-             projectId: 'YOUR_FIREBASE_PROJECT_ID',
-             authDomain: 'YOUR_FIREBASE_AUTH_DOMAIN',
-             storageBucket: 'YOUR_FIREBASE_STORAGE_BUCKET',
-             measurementId: 'YOUR_FIREBASE_MEASUREMENT_ID'
-         },
-     };
-     ```
-
-2. **Acceso a Vertex AI:**
-     - Asegúrate de que tu proyecto de Firebase tenga habilitado el acceso a Vertex AI en Google Cloud Platform.
-     - Debes tener las credenciales y permisos necesarios para consumir los servicios de Vertex AI desde tu backend o funciones.
-     - Consulta la [documentación oficial de Vertex AI](https://cloud.google.com/vertex-ai/docs/start) para más detalles sobre la configuración y autenticación.
-
-### Incia tu app 🚀
-
-```sh
-    ng s
+```bash
+flutter pub get
 ```
-### Configurar el estándar de commits
 
-Todo desarrollo debe seguir el template de commits:
+En caso de compilar para iOS o macOS, instala los pods:
+
+```bash
+cd ios && pod install && cd ..
+```
+
+---
+
+## ⚙️ Configuración de Firebase y Vertex AI
+
+Antes de ejecutar la app, debes enlazarla con tu propio proyecto de Firebase con Vertex AI habilitado:
+
+### 1. Habilitar Vertex AI en Firebase
+1. Ve a la consola de [Firebase Console](https://console.firebase.google.com/) y crea o selecciona tu proyecto.
+2. En el menú lateral, dirígete a **Build > Vertex AI in Firebase** y actívalo.
+3. Asegúrate de tener habilitada la facturación (Blaze Plan) en Google Cloud para el consumo de Vertex AI / Gemini.
+
+### 2. Configurar Firebase en la App
+Ejecuta el asistente de FlutterFire desde la carpeta `example/`:
+
+```bash
+flutterfire configure
+```
+Sigue los pasos interactivos para seleccionar las plataformas que desees (Android, iOS, Web, macOS). Esto generará la configuración de tu proyecto en `lib/firebase_options.dart`.
+
+> [!NOTE]
+> La aplicación utiliza el archivo `lib/config/firebase/firebase_options.dart`. Si ejecutas `flutterfire configure`, asegúrate de que las opciones correspondan a tu proyecto o copia las credenciales generadas a dicho archivo.
+
+> [!IMPORTANT]
+> Recuerda **nunca subir tus API keys o archivos de credenciales** (`google-services.json`, `GoogleService-Info.plist`, etc.) al repositorio.
+
+---
+
+## 📱 Permisos del Sistema
+
+La aplicación requiere permisos de hardware para las funciones de voz e imágenes:
+
+* **Micrófono (`RECORD_AUDIO` / `NSMicrophoneUsageDescription`)**: Necesario para grabar notas de voz, interactuar con el asistente y usar Gemini Live.
+* **Cámara y Galería (`CAMERA`, `READ_MEDIA_IMAGES` / `NSCameraUsageDescription`, `NSPhotoLibraryUsageDescription`)**: Para capturar o seleccionar fotos y adjuntarlas a las entradas del diario.
+
+Estos permisos ya se encuentran declarados en `example/android/app/src/main/AndroidManifest.xml` y `example/ios/Runner/Info.plist`.
+
+---
+
+## ▶️ Inicia tu app 🚀
+
+Ubícate en la carpeta `example/` y ejecuta según tu dispositivo objetivo:
+
+```bash
+# Iniciar en el dispositivo por defecto o selector interactivo
+flutter run
+
+# En emulador/dispositivo Android
+flutter run -d android
+
+# En simulador/dispositivo iOS
+flutter run -d ios
+
+# En el navegador Web
+flutter run -d chrome
+
+# En macOS
+flutter run -d macos
+```
+
+---
+
+## 📝 Configurar el estándar de commits
+
+Todo desarrollo en este repositorio debe seguir el formato estructurado de commits:
 
 ```bash
 # Este es el estandar de commit recuerda descomentar las categorías en las que aplique
@@ -69,13 +127,19 @@ Todo desarrollo debe seguir el template de commits:
 # Componentes que se afectaron:
 ```
 
-Se debe documentar el comando con el que se utilizar para habilitar este template, a saber:
+Para habilitar este template automáticamente en tu entorno Git local, ejecuta:
 
 ```bash
 git config commit.template .gitmessage.conf
 ```
 
-Recuerda que una vez hecho esto no debe utilizar el git commit -m sino que **unicamente copiar git commit**. De esta forma te mostrar el editor, para agregar texto debes presionar la letra “i” de insertar, debes borrar el numeral  que implique tu cambio y describirlo luego presionar escape (esc) y “:wq” para guardar los cambio o “:qa!” para descartarlos.
+> [!TIP]
+> Una vez configurado, realiza tus commits usando simplemente `git commit` (sin `-m`). Tu editor predeterminado (por ejemplo Vim o Nano) se abrirá con la plantilla. En Vim:
+> 1. Presiona `i` para entrar en modo inserción.
+> 2. Descomenta la categoría correspondiente (eliminando `#`) y escribe la descripción.
+> 3. Presiona `Esc`, escribe `:wq` y pulsa `Enter` para guardar y confirmar.
 
-## Autores del Documento
- - Daniel Herrera 21/11/2025 (weincoder)
+---
+
+## 👥 Autores del Documento
+- Daniel Herrera (weincoder)
