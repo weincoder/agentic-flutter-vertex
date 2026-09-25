@@ -19,7 +19,7 @@
 
 Transform your thoughts into beautiful diary entries using the power of Google's Gemini AI with real-time voice conversation capabilities.
 
-[Features](#-features) • [Demo](#-demo)
+[Documentation / Documentación (Docusaurus)](documentation/README.md) • [Features](#-features) • [Demo](#-demo)
 
 </div>
 

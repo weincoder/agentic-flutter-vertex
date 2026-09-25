@@ -1,0 +1,46 @@
+{
+  "link.title.Documentación": {
+    "message": "Documentación",
+    "description": "The title of the footer links column with title=Documentación in the footer"
+  },
+  "link.title.Tecnologías": {
+    "message": "Tecnologías",
+    "description": "The title of the footer links column with title=Tecnologías in the footer"
+  },
+  "link.title.Repositorio": {
+    "message": "Repositorio",
+    "description": "The title of the footer links column with title=Repositorio in the footer"
+  },
+  "link.item.label.Introducción": {
+    "message": "Introducción",
+    "description": "The label of footer link with label=Introducción linking to /"
+  },
+  "link.item.label.Conceptos Clave": {
+    "message": "Conceptos Clave",
+    "description": "The label of footer link with label=Conceptos Clave linking to /core-concepts"
+  },
+  "link.item.label.Agente en Tiempo Real (Live)": {
+    "message": "Agente en Tiempo Real (Live)",
+    "description": "The label of footer link with label=Agente en Tiempo Real (Live) linking to /live-agent"
+  },
+  "link.item.label.Flutter": {
+    "message": "Flutter",
+    "description": "The label of footer link with label=Flutter linking to https://flutter.dev"
+  },
+  "link.item.label.Google Cloud Vertex AI": {
+    "message": "Google Cloud Vertex AI",
+    "description": "The label of footer link with label=Google Cloud Vertex AI linking to https://cloud.google.com/vertex-ai"
+  },
+  "link.item.label.Firebase Vertex AI / firebase_ai": {
+    "message": "Firebase Vertex AI / firebase_ai",
+    "description": "The label of footer link with label=Firebase Vertex AI / firebase_ai linking to https://firebase.google.com/docs/vertex-ai"
+  },
+  "link.item.label.Código en GitHub": {
+    "message": "Código en GitHub",
+    "description": "The label of footer link with label=Código en GitHub linking to https://github.com/weincoder/agentic-flutter-vertex"
+  },
+  "copyright": {
+    "message": "Copyright © 2026 VoiceFlow Diary. Documentación creada para la comunidad de Flutter & IA.",
+    "description": "The footer copyright"
+  }
+}
