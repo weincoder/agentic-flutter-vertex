@@ -1,5 +1,5 @@
 import 'package:example/config/state/app_state.dart';
-import 'package:example/ui/pages/home_page.dart';
+import 'package:example/ui/pages/diary_home_page.dart';
 import 'package:feedback/feedback.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -22,7 +22,7 @@ class App extends StatelessWidget {
             child: MaterialApp(
               debugShowCheckedModeBanner: false,
               theme: appState.appTheme,
-              home: HomePage(),
+              home: const DiaryHomePage(),
             ),
           );
         },

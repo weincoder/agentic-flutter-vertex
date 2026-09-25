@@ -1,0 +1,64 @@
+# Miscellaneous
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+.atom/
+.build/
+.buildlog/
+.history
+.svn/
+.swiftpm/
+
+# IDE files
+*.iml
+*.ipr
+*.iws
+.idea/
+.vscode/
+
+# Flutter / Dart
+**/doc/api/
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+build/
+**/build/
+/coverage/
+
+# Android Studio / Gradle
+**/android/.gradle/
+**/android/app/debug/
+**/android/app/profile/
+**/android/app/release/
+local.properties
+key.properties
+**/*.keystore
+**/*.jks
+
+# iOS
+**/ios/Flutter/.last_build_id
+**/ios/Pods/
+**/DerivedData/
+
+# Sensitive & Firebase credentials
+*google-services.json
+*GoogleService-Info.plist
+firebase.json
+**/firebase_options.dart
+!example/lib/config/firebase/firebase_options.dart
+*.local.dart
+*.local
+*.backup
+*.env
+*.env.*

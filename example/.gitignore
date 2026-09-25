@@ -30,7 +30,8 @@ migrate_working_dir/
 .flutter-plugins-dependencies
 .pub-cache/
 .pub/
-/build/
+build/
+**/build/
 /coverage/
 
 # Symbolication related
@@ -43,3 +44,15 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Sensitive credentials & Firebase
+*google-services.json
+*GoogleService-Info.plist
+firebase.json
+lib/firebase_options.dart
+*.local.dart
+*.local
+*.backup
+*.env
+*.env.*
+
