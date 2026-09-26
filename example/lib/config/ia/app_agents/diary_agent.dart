@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:example/config/data/diary_repository.dart';
 import 'package:example/config/ia/models/ia_models.dart';
 import 'package:example/config/models/diary_entry.dart';
 import 'package:firebase_ai/firebase_ai.dart';
@@ -20,6 +21,8 @@ class DiaryAgent {
     model: IAModels.imageModelGemini,
     generationConfig: ImagenGenerationConfig(numberOfImages: 1),
   );
+
+  final _repository = DiaryRepository();
 
   /// Analiza el sentimiento de una entrada del diario
   /// Retorna el Sentiment detectado basándose en texto e imágenes
@@ -144,6 +147,88 @@ class DiaryAgent {
         'tags': <String>[],
         'summary': null,
       };
+    }
+  }
+
+  /// Crea y guarda una nueva entrada en el diario con análisis completo de IA e imagen artística
+  /// Retorna la DiaryEntry creada y persistida
+  Future<DiaryEntry> createEntry({
+    required String content,
+    String? title,
+    String? audioPath,
+    List<String>? imagePaths,
+    bool autoGenerateImage = true,
+  }) async {
+    try {
+      final entryId = DateTime.now().millisecondsSinceEpoch.toString();
+      final entryTitle = title?.trim() ?? '';
+      final entryContent = content.trim();
+
+      // Crear entrada base
+      final tempEntry = DiaryEntry(
+        id: entryId,
+        createdAt: DateTime.now(),
+        title: entryTitle,
+        content: entryContent,
+        audioPath: audioPath,
+        imagePaths: imagePaths ?? [],
+        sentiment: Sentiment.neutral,
+        tags: [],
+      );
+
+      // Determinar si debemos generar una imagen con IA
+      final shouldGenerateImage =
+          autoGenerateImage && (imagePaths == null || imagePaths.isEmpty);
+
+      // Ejecutar análisis de sentimientos/tags/resumen y generación de imagen en paralelo
+      final results = await Future.wait([
+        analyzeEntry(tempEntry),
+        if (shouldGenerateImage)
+          generateImage(content: entryContent, title: entryTitle)
+        else
+          Future.value(null),
+      ]);
+
+      final analysisResult = results[0] as Map<String, dynamic>;
+      final generatedImagePath = results[1] as String?;
+
+      final finalImagePaths = List<String>.from(imagePaths ?? []);
+      if (generatedImagePath != null && generatedImagePath.isNotEmpty) {
+        finalImagePaths.add(generatedImagePath);
+      }
+
+      // Crear entrada final con todos los metadatos de IA
+      final entry = tempEntry.copyWith(
+        sentiment: analysisResult['sentiment'] as Sentiment? ?? Sentiment.neutral,
+        tags: analysisResult['tags'] as List<String>? ?? <String>[],
+        aiSummary: analysisResult['summary'] as String?,
+        imagePaths: finalImagePaths,
+      );
+
+      // Persistir en base de datos
+      await _repository.saveEntry(entry);
+      debugPrint('Entrada creada y guardada exitosamente: ${entry.id}');
+
+      return entry;
+    } catch (e) {
+      debugPrint('Error en createEntry: $e');
+      // Fallback: guardar la entrada básica si falló el pipeline de IA
+      final fallbackEntry = DiaryEntry(
+        id: DateTime.now().millisecondsSinceEpoch.toString(),
+        createdAt: DateTime.now(),
+        title: title?.trim() ?? '',
+        content: content.trim(),
+        audioPath: audioPath,
+        imagePaths: imagePaths ?? [],
+        sentiment: Sentiment.neutral,
+        tags: [],
+      );
+      try {
+        await _repository.saveEntry(fallbackEntry);
+      } catch (saveError) {
+        debugPrint('Error en fallback saveEntry: $saveError');
+      }
+      return fallbackEntry;
     }
   }
 

@@ -23,6 +23,16 @@ El asistente de voz permite interactuar con tu diario mediante comandos de voz. 
 
 ## 📋 Comandos Disponibles
 
+### 📝 Crear / Agregar Entrada al Diario
+Crea y guarda una nueva entrada en el diario mediante comandos de voz. Al igual que el agente `diary_agent`, analiza automáticamente el sentimiento emocional, genera etiquetas inteligentes (tags), crea un resumen y genera una ilustración artística mediante IA (Imagen).
+
+**Ejemplos:**
+- "Agrega una entrada que diga hoy fue un gran día"
+- "Crea una entrada en mi diario sobre mi viaje a la montaña"
+- "Escribe en mi diario que me siento muy motivado con el proyecto"
+- "Anota que hoy aprendí Flutter con Vertex AI"
+- "Nueva entrada: salí a correr y el clima estuvo genial"
+
 ### 🎨 Cambiar Color de la App
 Cambia el color primario de toda la aplicación dinámicamente.
 

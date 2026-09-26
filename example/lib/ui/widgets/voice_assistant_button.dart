@@ -221,6 +221,10 @@ class _VoiceAssistantButtonState extends State<VoiceAssistantButton>
 
   Future<void> _executeCommandAction(VoiceCommandResult result) async {
     switch (result.type) {
+      case VoiceCommandType.createEntry:
+        widget.onDataChanged?.call();
+        break;
+
       case VoiceCommandType.changeColor:
         if (result.data != null && result.data!['color'] != null) {
           // Usar Provider para cambiar el color de la app

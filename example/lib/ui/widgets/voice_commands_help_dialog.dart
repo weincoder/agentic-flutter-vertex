@@ -31,6 +31,18 @@ class VoiceCommandsHelpDialog extends StatelessWidget {
             ),
             const SizedBox(height: 24),
             _buildCommandSection(
+              icon: Icons.edit_note_outlined,
+              color: Colors.teal,
+              title: 'Crear Entrada',
+              examples: [
+                '"Agrega una entrada: hoy fue un día genial"',
+                '"Crea una nota sobre mi viaje"',
+                '"Escribe en mi diario que aprendí Flutter"',
+              ],
+              theme: theme,
+            ),
+            const SizedBox(height: 16),
+            _buildCommandSection(
               icon: Icons.palette_outlined,
               color: Colors.purple,
               title: 'Cambiar Color',

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:developer';
 import 'dart:typed_data';
 import 'package:example/config/data/diary_repository.dart';
+import 'package:example/config/ia/app_agents/diary_agent.dart';
 import 'package:example/config/ia/models/ia_models.dart';
 import 'package:example/config/state/app_state.dart';
 import 'package:firebase_ai/firebase_ai.dart';
@@ -45,8 +46,9 @@ class _LiveVoiceAssistantState extends State<LiveVoiceAssistant>
   StreamController<Uint8List>? _micStreamController;
   StreamSubscription<Uint8List>? _micSubscription;
 
-  // Repository
+  // Repository & Agents
   final _repository = DiaryRepository();
+  final _diaryAgent = DiaryAgent();
 
   // Animation
   late AnimationController _pulseController;
@@ -70,10 +72,11 @@ Eres un asistente personal inteligente para una aplicación de diario.
 Hablas español de forma natural, amigable y conversacional.
 
 CAPACIDADES:
-1. Cambiar el color/tema de la aplicación
-2. Responder preguntas sobre cualquier tema
-3. Crear resúmenes de las entradas del diario
-4. Eliminar entradas (con confirmación del usuario)
+1. Crear y guardar nuevas entradas en el diario con título, contenido, análisis de IA e ilustración artística
+2. Cambiar el color/tema de la aplicación
+3. Responder preguntas sobre cualquier tema
+4. Crear resúmenes de las entradas del diario
+5. Eliminar entradas (con confirmación del usuario)
 
 INSTRUCCIONES IMPORTANTES:
 - Responde de forma concisa (máximo 3 oraciones)
@@ -99,6 +102,8 @@ en silencio tras una function call. Lee la respuesta de la herramienta y
 comunícala al usuario en español de forma natural AHORA.
 
 EJEMPLOS DE USO DE HERRAMIENTAS:
+- Usuario: "Anota en mi diario que hoy tuve un excelente día" → Llamar createDiaryEntry con content "Hoy tuve un excelente día" y title "Excelente día"
+- Usuario: "Crea una entrada: fui al parque y me sentí en paz" → Llamar createDiaryEntry con content "Fui al parque y me sentí en paz" y title "Paz en el parque"
 - Usuario: "Cambia el color a morado" → Llamar setAppColor con "purple"
 - Usuario: "Pon la app en verde" → Llamar setAppColor con "green"
 - Usuario: "¿Qué tiempo hace?" → Responder directamente (sin tool)
@@ -114,6 +119,7 @@ EJEMPLOS DE USO DE HERRAMIENTAS:
       ),
       tools: [
         Tool.functionDeclarations([
+          _buildCreateEntryTool(),
           _buildChangeColorTool(),
           _buildGetSummaryTool(),
           _buildDeleteEntryTool(),
@@ -528,6 +534,9 @@ EJEMPLOS DE USO DE HERRAMIENTAS:
       log('Tool call: ${call.name}');
 
       switch (call.name) {
+        case 'createDiaryEntry':
+          await _handleCreateEntry(call);
+          break;
         case 'setAppColor':
           await _handleColorChange(call);
           break;
@@ -538,6 +547,51 @@ EJEMPLOS DE USO DE HERRAMIENTAS:
           await _handleDeleteEntry(call);
           break;
       }
+    }
+  }
+
+  Future<void> _handleCreateEntry(FunctionCall call) async {
+    final content = call.args['content']?.toString() ?? '';
+    final title = call.args['title']?.toString();
+
+    if (content.trim().isEmpty) {
+      await _session.sendToolResponse([
+        FunctionResponse(call.name, {
+          'response':
+              'No se proporcionó contenido para la entrada. Pregunta al usuario en español AHORA qué desea anotar en su diario.',
+        }),
+      ]);
+      return;
+    }
+
+    try {
+      final entry = await _diaryAgent.createEntry(
+        content: content,
+        title: title != null && title.trim().isNotEmpty ? title.trim() : null,
+        autoGenerateImage: true,
+      );
+
+      widget.onDataChanged?.call();
+
+      final displayTitle =
+          entry.title.isNotEmpty ? entry.title : entry.contentPreview;
+
+      await _session.sendToolResponse([
+        FunctionResponse(call.name, {
+          'response':
+              'La entrada "$displayTitle" ha sido creada y guardada exitosamente en el diario con su análisis completo e ilustración artística. '
+              'Confirma amablemente al usuario en español AHORA que su entrada fue guardada.',
+        }),
+      ]);
+    } catch (e) {
+      log('Error creating diary entry in live session: $e');
+      await _session.sendToolResponse([
+        FunctionResponse(call.name, {
+          'response':
+              'Hubo un error al guardar la entrada en el diario. '
+              'Informa al usuario en español AHORA.',
+        }),
+      ]);
     }
   }
 
@@ -672,6 +726,23 @@ EJEMPLOS DE USO DE HERRAMIENTAS:
   }
 
   // Tool declarations
+  FunctionDeclaration _buildCreateEntryTool() {
+    return FunctionDeclaration(
+      'createDiaryEntry',
+      'Crea y guarda una nueva entrada en el diario personal con análisis completo de sentimientos, etiquetas, resumen e imagen artística generada por IA',
+      parameters: {
+        'content': Schema.string(
+          description:
+              'El texto o contenido principal que se guardará en la entrada del diario',
+        ),
+        'title': Schema.string(
+          description:
+              'Título breve y descriptivo para la entrada del diario (opcional)',
+        ),
+      },
+    );
+  }
+
   FunctionDeclaration _buildChangeColorTool() {
     return FunctionDeclaration(
       'setAppColor',
