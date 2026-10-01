@@ -183,10 +183,7 @@ VoiceFlow Diary offers **three distinct voice interaction modes** for maximum fl
 
 4. **Set up Vertex AI**
    - Enable Vertex AI API in Google Cloud Console
-   - Enable the following models:
-     - `gemini-1.5-flash` (Chat)
-     - `gemini-2.0-flash-live-preview-04-09` (Live)
-     - `imagen-3.0-generate-002` (Images)
+ 
 
 5. **Configure permissions**
 
